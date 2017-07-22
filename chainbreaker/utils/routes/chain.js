@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/createaccount', function(req,res, next){
+router.get('/createcustomer', function(req,res, next){
     invoke.invokeFunction('createCustomerProfile', ['Billy Bob Crankey Jr.', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
         if(val) {
             res.send(val);
@@ -47,8 +47,8 @@ router.get('/createpolicy', function(req,res, next){
     });
 });
 
-router.get('/createquote', function(req,res,next){
-    query.queryFunction('createquote', ['trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+router.get('/submitquote', function(req,res,next){
+    query.queryFunction('submitForQuote', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
         if(val) {
             res.send(val);
         } else {
