@@ -33,10 +33,10 @@ router.post('/login', function(req, res, next){
             req.session.user = user;
             res.redirect('/');
         } else {
-            res.render('login.jade', { error: 'Invalid email or password.' });
+            res.render('login', { error: 'Invalid email or password.' });
         }
     } else {
-        res.render('login.jade', { error: 'Invalid email or password.' });
+        res.render('login', { error: 'Invalid email or password.' });
     }
 });
 
