@@ -16,13 +16,13 @@ var channel = {};
 var client = null;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    if (req.session && req.session.user){
-        console.log("I have a session now");
-    }
-    if(typeof req.body.username != undefined && typeof req.body.password != undefined){
-        console.log(req.body.username + " " + req.body.password + " #######");
-    }
+router.get('/', requireLogin, function(req, res, next) {
+    // if (req.session && req.session.user){
+    //     console.log("I have a session now");
+    // }
+    // if(typeof req.body.username != undefined && typeof req.body.password != undefined){
+    //     console.log(req.body.username + " " + req.body.password + " #######");
+    // }
     res.render('index', { title: 'Express' });
 });
 
@@ -44,20 +44,7 @@ router.post('/login', function(req, res, next){
     }
 });
 
-function userKnown(emailAddr){
-    users.forEach(function(user){
-        if(user.emailaddr == emailAddr){
-            return user;
-        }
-    });
-    return null;
-}
 
-var users = [
-    {username:'test', emailaddr:'test@test.com', password: 'password'},
-    {username:'test1', emailaddr:'test1@test.com', password: 'password1'},
-    {username:'test2', emailaddr:'test2@test.com', password: 'password2'}
-];
 
 module.exports = router;
 
