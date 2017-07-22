@@ -100,8 +100,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.createPolicy(APIstub, args)
 	} else if function == "createCustomerProfile" {
 		return s.createCustomerProfile(APIstub, args)
-	} else if function == "createQuote" {
-		return s.createQuote(APIstub, args)
+	} else if function == "createPolicy" {
+		return s.createPolicy(APIstub, args)
+	} else if function == "submitForQuote" {
+		return s.submitForQuote(APIstub, args)
 	} else if function == "getCustomerProfile" {
 		return s.getCustomerProfile(APIstub, args)
 	}
@@ -165,18 +167,23 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 7 {
 		return shim.Error("Incorrect number of arguments. Expecting 7")
 	}
 
-	var prem, _ = strconv.ParseFloat(args[2], 64)
+	//BUSINESS LOGIC HERE FOR RATING BASED ON INFORMATION
+	prem := 100.00
+
+	//Create quote package
 	var quote = Quote{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
 
+	//Auth
 	email := args[5]
 	password := args[6]
 	customerKey := email + "-" + password
+
 	customerAsBytes, _ := APIstub.GetState(customerKey)
 	customer := Customer{}
 
@@ -194,7 +201,8 @@ func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []
 	customerAsBytes, _ = json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
-	return shim.Success(nil)
+	quoteAsBytes, _ = json.Marshal(quote)
+	return shim.Success(quoteAsBytes)
 }
 
 //Query functions
