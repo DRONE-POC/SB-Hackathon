@@ -41,6 +41,8 @@ app.use(function(req, res, next) {
   } else {
     // setting a property will automatically cause a Set-Cookie response
     // to be sent
+    console.log(req.body.user);
+    console.log(req.body);
     req.hecks.user = req.body.user;
     req.hecks.pass = req.body.pass
     res.setHeader('X-Seen-You', 'false');
@@ -63,15 +65,15 @@ app.use(function(req, res, next) {
   }
 });
 
-var requireLogin = function(req, res, next) {
-  if (!req.user) {
-    res.redirect('/login');
-  } else {
-    next();
-  }
-};
+// var requireLogin = function(req, res, next) {
+//   if (!req.user) {
+//     res.redirect('/login');
+//   } else {
+//     next();
+//   }
+// };
 
-app.use(requireLogin);
+// app.use(requireLogin);
 
 function userKnown(emailAddr){
     users.forEach(function(user){
