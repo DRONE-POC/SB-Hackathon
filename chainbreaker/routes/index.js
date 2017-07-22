@@ -31,14 +31,9 @@ router.get('/login', function(req, res, next){
 });
 
 router.post('/login', function(req, res, next){
-    var user = userKnown(req.body.email);
-    if(user != null){
-        if(req.body.pass === user.password) {
-            req.session.user = user;
-            res.redirect('/');
-        } else {
-            res.render('login', { error: 'Invalid email or password.' });
-        }
+    
+    if(req.user){
+        res.redirect('/');
     } else {
         res.render('login', { error: 'Invalid email or password.' });
     }
