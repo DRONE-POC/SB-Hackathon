@@ -1,15 +1,22 @@
 body {
-  padding: 50px;
+  /*padding: 50px;*/
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #6A2BA0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 a {
   color: #00B7FF;
 }
 
-header {
+.header {
   background-color: #8A66C3;
   height: 200px;
-  width: 100%
+  width: 100%;
+}
+
+.login-form{
+  width: 80%;
 }
