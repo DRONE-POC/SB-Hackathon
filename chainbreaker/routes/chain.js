@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.post('/createaccount', function(req,res, next){
+router.get('/createaccount', function(req,res, next){
     invoke.invokeFunction('createCustomerProfile', ['Billy Bob Crankey Jr.', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
         if(val) {
             res.send(val);
