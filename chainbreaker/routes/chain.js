@@ -34,7 +34,7 @@ router.post('/createaccount', function(req,res, next){
         } else {
             res.send('No like hillbillies')
         }
-    })
+    });
 });
 
 router.get('/getaccount', function(req,res,next){
