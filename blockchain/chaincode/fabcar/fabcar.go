@@ -38,8 +38,6 @@ import (
 	sc "github.com/hyperledger/fabric/protos/peer"
 )
 
-var globalCustomerID = "JS"
-
 // Define the Smart Contract structure
 type SmartContract struct {
 }
@@ -53,22 +51,29 @@ type Car struct {
 }
 
 type Customer struct {
-	Id   string
-	Name string
-	Email string
+	Name     string
+	Email    string
+	Password string
+	Quotes   []Quote
 	Policies []Policy
 }
 
 type Quote struct {
-	Price		int
+	Id          string
+	DeviceType  string
+	DeviceImage string
+	Premium     float32
+	StartDate   string
+	EndDate     string
 }
 
 type Policy struct {
-	DeviceType string
+	Id          string
+	DeviceType  string
 	DeviceImage string
-	Premium    int
-	StartDate  string
-	Days       int
+	Premium     float32
+	StartDate   string
+	EndDate     string
 }
 
 /*
@@ -88,18 +93,14 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Retrieve the requested Smart Contract function and arguments
 	function, args := APIstub.GetFunctionAndParameters()
 	// Route to the appropriate handler function to interact with the ledger appropriately
-	if function == "queryCar" {
-		return s.queryCar(APIstub, args)
-	} else if function == "initLedger" {
-		return s.initLedger(APIstub)
-	} else if function == "createCar" {
-		return s.createCar(APIstub, args)
-	} else if function == "queryAllCars" {
-		return s.queryAllCars(APIstub)
-	} else if function == "changeCarOwner" {
-		return s.changeCarOwner(APIstub, args)
-	} else if function == "createPolicy" {
+	if function == "createPolicy" {
 		return s.createPolicy(APIstub, args)
+	} else if function == "createCustomerProfile" {
+		return s.createCustomerProfile(APIstub, args)
+	} else if function == "createQuote" {
+		return s.getQuote(APIstub, args)
+	} else if function == "getCustomerProfile" {
+		return s.getCustomerProfile(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -112,10 +113,10 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
-	
+
 	var prem, _ = strconv.Atoi(args[2])
 	var days, _ = strconv.Atoi(args[4])
-	var policy = Policy{DeviceType: args[0] , DeviceImage: args[1], Premium: prem, StartDate: args[3], Days: days}
+	var policy = Policy{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], Days: days}
 
 	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
 	customer := Customer{}
@@ -132,38 +133,38 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) createCustomerAccount(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+	if len(args) != 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
 
-	var customer = Customer{Id: globalCustomerID, Name: args[0], Email: args[1]}
-
+	var customer = Customer{Name: args[0], Email: args[1], Password: args[2]}
+	var customerKey = customer.Email + "-" + customer.Password
 	customerAsBytes, _ := json.Marshal(customer)
-	APIstub.PutState(args[0], customerAsBytes)
+	APIstub.PutState(customerKey, customerAsBytes)
 
 	return shim.Success(nil)
 }
 
-//Query functions
+func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-// func (s *SmartContract) getQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-// }
-
-func (s *SmartContract) getCustomerAccount(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
-	return shim.Success(customerAsBytes)
 }
 
-// func (s *SmartContract) getPolicies(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+//Query functions
 
-// }
+func (s *SmartContract) getCustomerProfile(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	customerEmail := args[0]
+	customerPassword := args[1]
+
+	customerKey := customerEmail + "-" + customerPassword
+	customerAsBytes, _ := APIstub.GetState(customerKey)
+	return shim.Success(customerAsBytes)
+}
 
 ///////----------------------------------------------------------------------------------------------------------
 
