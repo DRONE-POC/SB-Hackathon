@@ -16,7 +16,7 @@ var channel = {};
 var client = null;
 
 /* GET home page. */
-router.get('/', requireLogin, function(req, res, next) {
+router.get('/', function(req, res, next) {
     // if (req.session && req.session.user){
     //     console.log("I have a session now");
     // }
