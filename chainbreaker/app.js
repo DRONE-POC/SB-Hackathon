@@ -14,7 +14,7 @@ var db = require('./utils/db');
 
 passport.use(new Strategy(
   function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
+    db.findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
       if (user.password != password) { return cb(null, false); }
@@ -27,7 +27,7 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
+  db.findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
   });
@@ -46,10 +46,27 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use('/', index);
+//app.use('/', index);
 app.use('/users', users);
 app.use('/chain', chain);
+app.get('/login',
+  function(req, res){
+    res.render('login');
+  });
+  
+app.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+app.get('/', require('connect-ensure-login').ensureLoggedIn(), function(req, res, next) {
+    res.render('index', { title: 'Express' });
+});
 
 // var users = [
 //     {id:'1', username:'test@test.com', emailaddr:'test@test.com', password: 'password'},
@@ -77,9 +94,7 @@ app.use('/chain', chain);
 
 
 
-app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -98,5 +113,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
