@@ -18,7 +18,7 @@ var client = null;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    invoke.invokeFunction('createCar', ['CAR13', 'FERARIF50', 'F50', 'RED']),then(function(val){
+    invoke.invokeFunction('createCar', ['CAR13', 'FERARIF50', 'F50', 'RED', 'Wendy Sperry']).then(function(val){
         if(val) {
             res.send(val);
         } else {
