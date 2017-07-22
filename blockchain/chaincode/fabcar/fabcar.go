@@ -65,6 +65,7 @@ type Quote struct {
 	Premium     float64
 	StartDate   string
 	EndDate     string
+	status      string
 }
 
 type Policy struct {
@@ -130,7 +131,7 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	policyList := customer.Policies
 
 	if len(policyList > 0) {
-		policy.Id = latestPolicy.Id + 1
+		policy.Id = policyList[len(policyList)-1].Id + 1
 	}
 
 	updatedPolicyList := append(policyList, policy)
@@ -165,6 +166,34 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 }
 
 func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 7 {
+		return shim.Error("Incorrect number of arguments. Expecting 7")
+	}
+
+	var prem, _ = strconv.ParseFloat(args[2], 64)
+	var quote = Quote{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
+
+	email := args[5]
+	password := args[6]
+	customerKey := email + "-" + password
+	customerAsBytes, _ := APIstub.GetState(customerKey)
+	customer := Customer{}
+
+	json.Unmarshal(customerAsBytes, &customer)
+
+	quoteList := customer.Policies
+
+	if len(quoteList > 0) {
+		Quote.Id = quoteList[len(quoteList)-1].Id + 1
+	}
+
+	updatedQuoteList := append(quoteList, quote)
+	customer.Policies = updatedQuoteList
+
+	customerAsBytes, _ = json.Marshal(customer)
+	APIstub.PutState(customerKey, customerAsBytes)
+
 	return shim.Success(nil)
 }
 
