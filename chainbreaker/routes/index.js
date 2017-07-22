@@ -28,8 +28,9 @@ router.post('/login', function(req, res, next){
     if(typeof req.body.username != undefined && typeof req.body.password != undefined){
         res.redirect(301,'/');        
     } else {
-        req.body.username = 'test';
-        req.body.password = 'pass';
+        res.body.username = 'test';
+        res.body.password = 'pass';
+        res.headers["Set-Cookie"] = "testCookie@test.com";
         res.redirect(301,'/');
     }
 });
