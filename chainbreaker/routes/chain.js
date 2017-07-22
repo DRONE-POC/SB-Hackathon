@@ -47,13 +47,15 @@ router.get('/createpolicy', function(req,res, next){
     });
 });
 
-router.get('/submitquote', function(req,res,next){
-    query.queryFunction('submitForQuote', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
-        if(val) {
-            res.send(val);
-        } else {
-            res.send('could not create quote');
-        }
+router.get('/submitquote', function (req, res, next) {
+    invoke.invokeFunction('submitForQuote', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
+        query.queryFunction('getCustomerProfile', ['trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
+            if (val) {
+                res.send(val);
+            } else {
+                res.send('could not retrieve customer');
+            }
+        });
     });
 });
 
