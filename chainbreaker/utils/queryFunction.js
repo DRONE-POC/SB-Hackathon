@@ -7,6 +7,7 @@
 /*
  * Hyperledger Fabric Sample Query Program
  */
+var exports = module.exports = {};
 
 var hfc = require('fabric-client');
 var path = require('path');
@@ -23,7 +24,7 @@ var options = {
 var channel = {};
 var client = null;
 
-function queryFunction(funcName, args) {
+exports.queryFunction = function(funcName, args) {
     var deferred = Q.defer();
     Promise.resolve().then(() => {
         console.log("Create a client and set the wallet location");
