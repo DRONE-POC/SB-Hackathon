@@ -94,7 +94,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Retrieve the requested Smart Contract function and arguments
 	function, args := APIstub.GetFunctionAndParameters()
 
-	fmt.printLn("In the smart contract!")
+	fmt.Println("In the smart contract!")
 	// Route to the appropriate handler function to interact with the ledger appropriately
 	if function == "createPolicy" {
 		return s.createPolicy(APIstub, args)
@@ -130,7 +130,7 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 
 	policyList := customer.Policies
 
-	if len(policyList > 0) {
+	if len(policyList) > 0 {
 		policy.Id = policyList[len(policyList)-1].Id + 1
 	}
 
@@ -182,14 +182,14 @@ func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []
 
 	json.Unmarshal(customerAsBytes, &customer)
 
-	quoteList := customer.Policies
+	quoteList := customer.Quotes
 
-	if len(quoteList > 0) {
-		Quote.Id = quoteList[len(quoteList)-1].Id + 1
+	if len(quoteList) > 0 {
+		quote.Id = quoteList[len(quoteList)-1].Id + 1
 	}
 
 	updatedQuoteList := append(quoteList, quote)
-	customer.Policies = updatedQuoteList
+	customer.Quotes = updatedQuoteList
 
 	customerAsBytes, _ = json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
