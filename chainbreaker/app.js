@@ -4,7 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('client-sessions');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -28,52 +29,11 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/chain', chain);
 
-app.use(session({
-  cookieName: 'hecks',
-  secret: 'amanaplanacanalpanama',
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000,
-}));
-
-app.use(function(req, res, next) {
-  if (req.hecks.user && req.hecks.pass) {
-    res.setHeader('X-Seen-You', 'true');
-  } else {
-    // setting a property will automatically cause a Set-Cookie response
-    // to be sent
-    console.log(req.body.user);
-    console.log(req.body);
-    req.hecks.user = req.body.user;
-    req.hecks.pass = req.body.pass
-    res.setHeader('X-Seen-You', 'false');
-  }
-});
-
-app.use(function(req, res, next) {
-  if (req.session && req.session.user) {
-    user = userKnown(req.session.user.email);
-    if (user) {
-      req.user = user;
-      delete req.user.password; // delete the password from the session
-      req.session.user = user;  //refresh the session value
-      res.locals.user = user;
-    }
-    // finishing processing the middleware and run the route
-    next();
-  } else {
-    next();
-  }
-});
-
-// var requireLogin = function(req, res, next) {
-//   if (!req.user) {
-//     res.redirect('/login');
-//   } else {
-//     next();
-//   }
-// };
-
-// app.use(requireLogin);
+var users = [
+    {id:'1', username:'test', emailaddr:'test@test.com', password: 'password'},
+    {id:'2', username:'test1', emailaddr:'test1@test.com', password: 'password1'},
+    {id:'3', username:'test2', emailaddr:'test2@test.com', password: 'password2'}
+];
 
 function userKnown(emailAddr){
     users.forEach(function(user){
@@ -84,11 +44,37 @@ function userKnown(emailAddr){
     return null;
 }
 
-var users = [
-    {username:'test', emailaddr:'test@test.com', password: 'password'},
-    {username:'test1', emailaddr:'test1@test.com', password: 'password1'},
-    {username:'test2', emailaddr:'test2@test.com', password: 'password2'}
-];
+function findByID(id){
+  users.forEach(function(user){
+    if(user.id == id){
+      return user;
+    }
+  });
+  return null;
+}
+
+passport.use(new Strategy(
+  function(username, password, cb) {
+    var user = userKnown(username);
+      if (!user) { return cb(null, false); }
+      if (user.password != password) { return cb(null, false); }
+      return cb(null, user);
+  }
+));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+    var user = findByID(id);
+    if (!user) { return cb(err); }
+    cb(null, user);
+});
+
+app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -107,5 +93,16 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.get('/login',
+  function(req, res){
+    res.render('login');
+  });
+  
+app.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
 module.exports = app;
