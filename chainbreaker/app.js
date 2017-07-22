@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
-var index = require('./routes/index');
+//var index = require('./routes/index');
 var users = require('./routes/users');
 var chain = require('./routes/chain');
 var db = require('./utils/db');
