@@ -41,11 +41,6 @@ router.post('/login', function(req, res, next){
 });
 
 function userKnown(emailAddr){
-    var users = [
-        {username:'test', emailaddr:'test@test.com', password: 'password'},
-        {username:'test1', emailaddr:'test1@test.com', password: 'password1'},
-        {username:'test2', emailaddr:'test2@test.com', password: 'password2'}
-    ]
     users.forEach(function(user){
         if(user.emailaddr == emailAddr){
             return user;
@@ -53,6 +48,12 @@ function userKnown(emailAddr){
     });
     return null;
 }
+
+var users = [
+    {username:'test', emailaddr:'test@test.com', password: 'password'},
+    {username:'test1', emailaddr:'test1@test.com', password: 'password1'},
+    {username:'test2', emailaddr:'test2@test.com', password: 'password2'}
+];
 
 module.exports = router;
 
