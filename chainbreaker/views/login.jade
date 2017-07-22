@@ -8,15 +8,12 @@ block content
                 h2 Hello!
                 h6 Please Login To Your Account
                 .form-group
-                    label Email
-                    input.form-control(type='text', id='user-tf', name='email')
+                    label User Name
+                    input.form-control(type='text', id='user-tf', name='username')
                 .form-group
                     label Password
-                    input.form-control(type='password', id='pass-tf', name='pass')
+                    input.form-control(type='password', id='pass-tf', name='password')
                 .controls
-                    button(type='button').btn.btn-default.button-rememember-me
-                        span.glyphicon.glyphicon-unchecked.button-rememember-me-glyph
-                        | Remember Me
                     button(type='submit').btn.btn-primary.button-sign-in
                         span.glyphicon.glyphicon-lock
                         | Sign In
