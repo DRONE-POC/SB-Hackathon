@@ -28,6 +28,7 @@ var channel = {};
 var client = null;
 var targets = [];
 var tx_id = null;
+var payload = "Sup";
 
 exports.invokeFunction = function(funcName, args) {
     var deferred = Q.defer();
@@ -87,6 +88,7 @@ exports.invokeFunction = function(funcName, args) {
                 proposal: proposal,
                 header: header
             };
+            payload = proposalResponses[0].response.payload;
             // set the transaction listener and set a timeout of 30sec
             // if the transaction did not get committed within the timeout period,
             // fail the test
@@ -144,7 +146,10 @@ exports.invokeFunction = function(funcName, args) {
     }).then((response) => {
         if (response.status === 'SUCCESS') {
             console.log('Successfully sent transaction to the orderer.');
-            deferred.resolve(proposalResponses[0].response.payload);
+            if (payload == nil) {
+                payload = "No response sent"
+            }
+            deferred.resolve(payload);
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
             return 'Failed to order the transaction. Error code: ' + response.status;
