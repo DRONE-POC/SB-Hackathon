@@ -224,7 +224,7 @@ func (s *SmartContract) createCar(APIstub shim.ChaincodeStubInterface, args []st
 
 	carAsBytes, _ := json.Marshal(car)
 	APIstub.PutState(args[0], carAsBytes)
-
+	fmt.Println("Created a car!")
 	return shim.Success(nil)
 }
 
