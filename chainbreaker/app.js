@@ -36,6 +36,18 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
+  if (req.hecks.user && req.hecks.pass) {
+    res.setHeader('X-Seen-You', 'true');
+  } else {
+    // setting a property will automatically cause a Set-Cookie response
+    // to be sent
+    req.hecks.user = req.body.user;
+    req.hecks.pass = req.body.pass
+    res.setHeader('X-Seen-You', 'false');
+  }
+});
+
+app.use(function(req, res, next) {
   if (req.session && req.session.user) {
     user = userKnown(req.session.user.email);
     if (user) {
