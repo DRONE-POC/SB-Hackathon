@@ -28,11 +28,28 @@ router.post('/login', function(req, res, next){
     if(typeof req.body.username != undefined && typeof req.body.password != undefined){
         res.redirect(301,'/');        
     } else {
-        req.body.username = 'test';
-        req.body.password = 'pass';
+        res.body.username = 'test';
+        res.body.password = 'pass';
+        res.headers["Set-Cookie"] = "testCookie@test.com";
         res.redirect(301,'/');
     }
 });
+
+// app.post('/login', function(req, res) {
+//   User.findOne({ email: req.body.email }, function(err, user) {
+//     if (!user) {
+//       res.render('login.jade', { error: 'Invalid email or password.' });
+//     } else {
+//       if (req.body.password === user.password) {
+//         // sets a cookie with the user's info
+//         req.session.user = user;
+//         res.redirect('/dashboard');
+//       } else {
+//         res.render('login.jade', { error: 'Invalid email or password.' });
+//       }
+//     }
+//   });
+// });
 
 module.exports = router;
 
