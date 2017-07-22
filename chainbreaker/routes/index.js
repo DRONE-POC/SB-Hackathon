@@ -26,10 +26,14 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
+router.get('/login', function(req, res, next){
+    res.render('login', { error: 'Invalid email or password.' });
+});
+
 router.post('/login', function(req, res, next){
     var user = userKnown(req.body.email);
     if(user != null){
-        if(req.body.password === user.password) {
+        if(req.body.pass === user.password) {
             req.session.user = user;
             res.redirect('/');
         } else {
