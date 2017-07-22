@@ -38,6 +38,8 @@ import (
 	sc "github.com/hyperledger/fabric/protos/peer"
 )
 
+var globalCustomerID = "JS"
+
 // Define the Smart Contract structure
 type SmartContract struct {
 }
@@ -48,6 +50,25 @@ type Car struct {
 	Model  string `json:"model"`
 	Colour string `json:"colour"`
 	Owner  string `json:"owner"`
+}
+
+type Customer struct {
+	Id   string
+	Name string
+	Email string
+	Policies Policy[]
+}
+
+type Quote struct {
+	Price		int
+}
+
+type Policy struct {
+	DeviceType string
+	DeviceImage string
+	Premium    string
+	StartDate  string
+	Days       int
 }
 
 /*
@@ -77,10 +98,76 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryAllCars(APIstub)
 	} else if function == "changeCarOwner" {
 		return s.changeCarOwner(APIstub, args)
+	} else if function == "createPolicy" {
+		return s.createPoliy(APIstub, args)
+	} else if function == "createQuote" {
+		return s.createQuote(APIstub, args)
+	} else if function == getPolicies(APIstub, args){
+		return s.getPolicies(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
 }
+
+//Invoke functions
+
+func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 5 {
+		return shim.error("Incorrect number of arguments. Expecting 5")
+	}
+
+	var policy := Policy{DeviceType: args[0] , DeviceImage: args[1], Premium: args[2], StartDate: args[3], Days: args[4]}
+
+	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
+	customer := Customer{}
+
+	json.Unmarshal(customerAsBytes, &customer)
+
+	policyList = customer.Policies
+	updatedPolicyList = policyList.append(policyList, policy)
+	customer.Policies = updatedPolicyList
+
+	customerAsBytes, _ = json.Marshal(customer)
+	APIstub.PutState(globalCustomerID, customerAsBytes)
+
+	return shim.Success(nil)
+}
+
+func (s *SmartContract) createCustomerAccount(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	var customer := Customer{Id: globalCustomerID, Name: args[0], Email: args[1], Policies: []}
+
+	customerAsBytes, _ := json.Marshal(customer)
+	APIstub.PutState(args[0], customerAsBytes)
+
+	return shim.Success(nil)
+}
+
+//Query functions
+
+// func (s *SmartContract) getQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+// }
+
+func (s *SmartContract) getCustomerAccount(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
+	return shim.Success(customerAsBytes)
+}
+
+// func (s *SmartContract) getPolicies(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+// }
+
+///////----------------------------------------------------------------------------------------------------------
 
 func (s *SmartContract) queryCar(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
