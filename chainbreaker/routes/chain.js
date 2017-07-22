@@ -28,11 +28,23 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/createaccount', function(req,res, next){
-    if(!req.body && !req.body.account){
-        res.status(400);
-        res.send('failed to receive quote package');
-    }
-    res.send('account created');
+    invoke.invokeFunction('createCustomerProfile', ['Billy Bob Crankey Jr.', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+        if(val) {
+            res.send(val);
+        } else {
+            res.send('No like hillbillies')
+        }
+    })
+});
+
+router.get('/getaccount', function(req,res,next){
+    query.queryFunction('getCustomerProfile', ['trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+        if(val) {
+            res.send(val);
+        } else {
+            res.send('no account with that key');
+        }
+    });
 });
 
 router.get('/checkstatus?=custID', function(req,res,next){
