@@ -56,7 +56,7 @@ type Customer struct {
 	Id   string
 	Name string
 	Email string
-	Policies Policy[]
+	Policies []Policy
 }
 
 type Quote struct {
@@ -66,7 +66,7 @@ type Quote struct {
 type Policy struct {
 	DeviceType string
 	DeviceImage string
-	Premium    string
+	Premium    int
 	StartDate  string
 	Days       int
 }
@@ -99,11 +99,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "changeCarOwner" {
 		return s.changeCarOwner(APIstub, args)
 	} else if function == "createPolicy" {
-		return s.createPoliy(APIstub, args)
-	} else if function == "createQuote" {
-		return s.createQuote(APIstub, args)
-	} else if function == getPolicies(APIstub, args){
-		return s.getPolicies(APIstub, args)
+		return s.createPolicy(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -114,18 +110,20 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 5 {
-		return shim.error("Incorrect number of arguments. Expecting 5")
+		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
-
-	var policy := Policy{DeviceType: args[0] , DeviceImage: args[1], Premium: args[2], StartDate: args[3], Days: args[4]}
+	
+	var prem, _ = strconv.Atoi(args[2])
+	var days, _ = strconv.Atoi(args[4])
+	var policy = Policy{DeviceType: args[0] , DeviceImage: args[1], Premium: prem, StartDate: args[3], Days: days}
 
 	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
 	customer := Customer{}
 
 	json.Unmarshal(customerAsBytes, &customer)
 
-	policyList = customer.Policies
-	updatedPolicyList = policyList.append(policyList, policy)
+	policyList := customer.Policies
+	updatedPolicyList := append(policyList, policy)
 	customer.Policies = updatedPolicyList
 
 	customerAsBytes, _ = json.Marshal(customer)
@@ -140,7 +138,7 @@ func (s *SmartContract) createCustomerAccount(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	var customer := Customer{Id: globalCustomerID, Name: args[0], Email: args[1], Policies: []}
+	var customer = Customer{Id: globalCustomerID, Name: args[0], Email: args[1]}
 
 	customerAsBytes, _ := json.Marshal(customer)
 	APIstub.PutState(args[0], customerAsBytes)
