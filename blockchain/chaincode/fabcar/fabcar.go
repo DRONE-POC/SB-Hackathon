@@ -92,6 +92,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 
 	// Retrieve the requested Smart Contract function and arguments
 	function, args := APIstub.GetFunctionAndParameters()
+
+	fmt.printLn("In the smart contract!")
 	// Route to the appropriate handler function to interact with the ledger appropriately
 	if function == "createPolicy" {
 		return s.createPolicy(APIstub, args)
@@ -116,7 +118,7 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 
 	var prem, _ = strconv.ParseFloat(args[2], 64)
 	var policy = Policy{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
-	
+
 	customerKey := args[5] + "-" + args[6]
 	customerAsBytes, _ := APIstub.GetState(customerKey)
 	customer := Customer{}
@@ -135,12 +137,17 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 
 func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
+	fmt.Println("Initial arguments : %s", args)
+
 	if len(args) != 3 {
+		fmt.Println("error")
 		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
 
 	var customer = Customer{Name: args[0], Email: args[1], Password: args[2]}
 	var customerKey = customer.Email + "-" + customer.Password
+	fmt.Println(customer)
+	fmt.Println(customerKey)
 	customerAsBytes, _ := json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
