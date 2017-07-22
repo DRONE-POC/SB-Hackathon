@@ -51,13 +51,15 @@ app.use(function(req, res, next) {
   }
 });
 
-function requireLogin (req, res, next) {
+var requireLogin = function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');
   } else {
     next();
   }
 };
+
+app.use(requireLogin);
 
 function userKnown(emailAddr){
     users.forEach(function(user){
