@@ -30,9 +30,9 @@ app.use('/users', users);
 app.use('/chain', chain);
 
 var users = [
-    {id:'1', username:'test', emailaddr:'test@test.com', password: 'password'},
-    {id:'2', username:'test1', emailaddr:'test1@test.com', password: 'password1'},
-    {id:'3', username:'test2', emailaddr:'test2@test.com', password: 'password2'}
+    {id:'1', username:'test@test.com', emailaddr:'test@test.com', password: 'password'},
+    {id:'2', username:'test1@test.com', emailaddr:'test1@test.com', password: 'password1'},
+    {id:'3', username:'test2@test.com', emailaddr:'test2@test.com', password: 'password2'}
 ];
 
 function userKnown(emailAddr){
