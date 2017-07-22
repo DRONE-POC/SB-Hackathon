@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var hfc = require('fabric-client');
 var path = require('path');
+var passport = require('passport');
 
 var options = {
     wallet_path: path.join(__dirname, '../utils'),
@@ -20,17 +21,29 @@ router.get('/', require('connect-ensure-login').ensureLoggedIn(), function(req, 
     res.render('index', { title: 'Express' });
 });
 
-// router.get('/login', function(req, res, next){
-//     res.render('login', { error: 'Invalid email or password.' });
-// });
+router.get('/login', function(req, res, next){
+    res.render('login', { error: 'Invalid email or password.' });
+});
 
-// router.post('/login', function(req, res, next){
-//     if(req.user){
-//         res.redirect('/');
-//     } else {
-//         res.render('login', { error: 'Invalid email or password.' });
-//     }
-// });
+router.post('/login', function(req, res, next){
+    console.log(req);
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+        res.redirect('/');
+    }
+});
+
+
+// app.get('/login',
+//   function(req, res){
+//     res.render('login');
+//   });
+  
+// app.post('/login', 
+//   passport.authenticate('local', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     res.redirect('/');
+//   });
 
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
