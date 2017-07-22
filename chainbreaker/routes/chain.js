@@ -37,7 +37,27 @@ router.get('/createaccount', function(req,res, next){
     });
 });
 
-router.get('/getaccount', function(req,res,next){
+router.get('/createpolicy', function(req,res, next){
+    invoke.invokeFunction('createPolicy', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+        if(val) {
+            res.send(val);
+        } else {
+            res.send('No like hillbillies')
+        }
+    });
+});
+
+router.get('/createquote', function(req,res,next){
+    query.queryFunction('createquote', ['trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+        if(val) {
+            res.send(val);
+        } else {
+            res.send('could not create quote');
+        }
+    });
+});
+
+router.get('/getcustomer', function(req,res,next){
     query.queryFunction('getCustomerProfile', ['trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
         if(val) {
             res.send(val);

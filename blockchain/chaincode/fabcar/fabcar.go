@@ -59,7 +59,7 @@ type Customer struct {
 }
 
 type Quote struct {
-	Id          string
+	Id          int64
 	DeviceType  string
 	DeviceImage string
 	Premium     float64
@@ -68,7 +68,7 @@ type Quote struct {
 }
 
 type Policy struct {
-	Id          string
+	Id          int64
 	DeviceType  string
 	DeviceImage string
 	Premium     float64
@@ -119,13 +119,20 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	var prem, _ = strconv.ParseFloat(args[2], 64)
 	var policy = Policy{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
 
-	customerKey := args[5] + "-" + args[6]
+	email := args[5]
+	password := args[6]
+	customerKey := email + "-" + password
 	customerAsBytes, _ := APIstub.GetState(customerKey)
 	customer := Customer{}
 
 	json.Unmarshal(customerAsBytes, &customer)
 
 	policyList := customer.Policies
+
+	if len(policyList > 0) {
+		policy.Id = latestPolicy.Id + 1
+	}
+
 	updatedPolicyList := append(policyList, policy)
 	customer.Policies = updatedPolicyList
 
@@ -147,7 +154,7 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 	customer := Customer{}
 	customer.Name = args[0]
 	customer.Email = args[1]
-	customer.Password = args[2]	
+	customer.Password = args[2]
 	var customerKey = customer.Email + "-" + customer.Password
 	fmt.Println(customer)
 	fmt.Println(customerKey)
