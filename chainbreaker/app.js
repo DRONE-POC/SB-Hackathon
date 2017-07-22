@@ -10,6 +10,28 @@ var Strategy = require('passport-local').Strategy;
 var index = require('./routes/index');
 var users = require('./routes/users');
 var chain = require('./routes/chain');
+var db = require('./utils/db');
+
+passport.use(new Strategy(
+  function(username, password, cb) {
+    db.users.findByUsername(username, function(err, user) {
+      if (err) { return cb(err); }
+      if (!user) { return cb(null, false); }
+      if (user.password != password) { return cb(null, false); }
+      return cb(null, user);
+    });
+}));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  db.users.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
 
 var app = express();
 
@@ -29,48 +51,31 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/chain', chain);
 
-var users = [
-    {id:'1', username:'test@test.com', emailaddr:'test@test.com', password: 'password'},
-    {id:'2', username:'test1@test.com', emailaddr:'test1@test.com', password: 'password1'},
-    {id:'3', username:'test2@test.com', emailaddr:'test2@test.com', password: 'password2'}
-];
+// var users = [
+//     {id:'1', username:'test@test.com', emailaddr:'test@test.com', password: 'password'},
+//     {id:'2', username:'test1@test.com', emailaddr:'test1@test.com', password: 'password1'},
+//     {id:'3', username:'test2@test.com', emailaddr:'test2@test.com', password: 'password2'}
+// ];
 
-function userKnown(emailAddr){
-    users.forEach(function(user){
-        if(user.emailaddr == emailAddr){
-            return user;
-        }
-    });
-    return null;
-}
+// function userKnown(emailAddr){
+//     users.forEach(function(user){
+//         if(user.emailaddr == emailAddr){
+//             return user;
+//         }
+//     });
+//     return null;
+// }
 
-function findByID(id){
-  users.forEach(function(user){
-    if(user.id == id){
-      return user;
-    }
-  });
-  return null;
-}
+// function findByID(id){
+//   users.forEach(function(user){
+//     if(user.id == id){
+//       return user;
+//     }
+//   });
+//   return null;
+// }
 
-passport.use(new Strategy(
-  function(username, password, cb) {
-    var user = userKnown(username);
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
-  }
-));
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
-});
-
-passport.deserializeUser(function(id, cb) {
-    var user = findByID(id);
-    if (!user) { return cb(err); }
-    cb(null, user);
-});
 
 app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
