@@ -46,6 +46,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //app.use('/', index);
 app.use('/users', users);
@@ -91,9 +94,7 @@ app.get('/', require('connect-ensure-login').ensureLoggedIn(), function(req, res
 
 
 
-app.use(require('express-session')({ secret: 'amanaplanacanalpanama', resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
