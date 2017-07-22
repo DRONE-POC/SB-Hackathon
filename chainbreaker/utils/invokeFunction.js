@@ -144,7 +144,7 @@ exports.invokeFunction = function(funcName, args) {
     }).then((response) => {
         if (response.status === 'SUCCESS') {
             console.log('Successfully sent transaction to the orderer.');
-            deferred.resolve(tx_id.getTransactionID());
+            deferred.resolve(proposalResponses[0].response.payload);
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
             return 'Failed to order the transaction. Error code: ' + response.status;
