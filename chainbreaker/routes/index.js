@@ -17,7 +17,9 @@ var client = null;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
+    if (req.session && req.session.user){
+        console.log("I have a session now");
+    }
     if(typeof req.body.username != undefined && typeof req.body.password != undefined){
         console.log(req.body.username + " " + req.body.password + " #######");
     }
@@ -25,31 +27,32 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next){
-    if(typeof req.body.username != undefined && typeof req.body.password != undefined){
-        res.redirect(301,'/');        
+    var user = userKnown(req.body.email);
+    if(user != null){
+        if(req.body.password === user.password) {
+            req.session.user = user;
+            res.redirect('/');
+        } else {
+            res.render('login.jade', { error: 'Invalid email or password.' });
+        }
     } else {
-        res.body.username = 'test';
-        res.body.password = 'pass';
-        res.headers["Set-Cookie"] = "testCookie@test.com";
-        res.redirect(301,'/');
+        res.render('login.jade', { error: 'Invalid email or password.' });
     }
 });
 
-// app.post('/login', function(req, res) {
-//   User.findOne({ email: req.body.email }, function(err, user) {
-//     if (!user) {
-//       res.render('login.jade', { error: 'Invalid email or password.' });
-//     } else {
-//       if (req.body.password === user.password) {
-//         // sets a cookie with the user's info
-//         req.session.user = user;
-//         res.redirect('/dashboard');
-//       } else {
-//         res.render('login.jade', { error: 'Invalid email or password.' });
-//       }
-//     }
-//   });
-// });
+function userKnown(emailAddr){
+    var users = [
+        {username:'test', emailaddr:'test@test.com', password: 'password'},
+        {username:'test1', emailaddr:'test1@test.com', password: 'password1'},
+        {username:'test2', emailaddr:'test2@test.com', password: 'password2'}
+    ]
+    users.forEach(function(user){
+        if(user.emailaddr == emailAddr){
+            return user;
+        }
+    });
+    return null;
+}
 
 module.exports = router;
 
