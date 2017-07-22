@@ -13,7 +13,7 @@ var path = require('path');
 var Q = require('q');
 
 var options = {
-    wallet_path: path.join(__dirname, './creds'),
+    wallet_path: path.join(__dirname, './'),
     user_id: 'PeerAdmin',
     channel_id: 'mychannel',
     chaincode_id: 'fabcar',
