@@ -139,8 +139,12 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
 
-	var customer = Customer{Name: args[0], Email: args[1], Password: args[2]}
-	var customerKey = customer.Email + "-" + customer.Password
+	//var customer = Customer{Name: args[0], Email: args[1], Password: args[2]}
+	customer := Customer{}
+	customer.Name = args[0]
+	customer.Email = args[1]
+	customer.Password = args[2]	
+var customerKey = customer.Email + "-" + customer.Password
 	customerAsBytes, _ := json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
