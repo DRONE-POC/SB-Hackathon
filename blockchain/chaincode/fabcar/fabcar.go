@@ -62,7 +62,7 @@ type Quote struct {
 	Id          string
 	DeviceType  string
 	DeviceImage string
-	Premium     float32
+	Premium     float64
 	StartDate   string
 	EndDate     string
 }
@@ -71,7 +71,7 @@ type Policy struct {
 	Id          string
 	DeviceType  string
 	DeviceImage string
-	Premium     float32
+	Premium     float64
 	StartDate   string
 	EndDate     string
 }
@@ -98,7 +98,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "createCustomerProfile" {
 		return s.createCustomerProfile(APIstub, args)
 	} else if function == "createQuote" {
-		return s.getQuote(APIstub, args)
+		return s.createQuote(APIstub, args)
 	} else if function == "getCustomerProfile" {
 		return s.getCustomerProfile(APIstub, args)
 	}
@@ -110,15 +110,15 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 
 func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+	if len(args) != 7 {
+		return shim.Error("Incorrect number of arguments. Expecting 7")
 	}
 
-	var prem, _ = strconv.Atoi(args[2])
-	var days, _ = strconv.Atoi(args[4])
-	var policy = Policy{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], Days: days}
-
-	customerAsBytes, _ := APIstub.GetState(globalCustomerID)
+	var prem, _ = strconv.ParseFloat(args[2], 64)
+	var policy = Policy{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
+	
+	customerKey := args[5] + "-" + args[6]
+	customerAsBytes, _ := APIstub.GetState(customerKey)
 	customer := Customer{}
 
 	json.Unmarshal(customerAsBytes, &customer)
@@ -128,7 +128,7 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	customer.Policies = updatedPolicyList
 
 	customerAsBytes, _ = json.Marshal(customer)
-	APIstub.PutState(globalCustomerID, customerAsBytes)
+	APIstub.PutState(customerKey, customerAsBytes)
 
 	return shim.Success(nil)
 }
@@ -148,7 +148,7 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 }
 
 func (s *SmartContract) createQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
+	return shim.Success(nil)
 }
 
 //Query functions

@@ -54,8 +54,8 @@ Promise.resolve().then(() => {
     var request = {
         targets: targets,
         chaincodeId: options.chaincode_id,
-        fcn: '',
-        args: [''],
+        fcn: 'createCar',
+        args: ['CAR11','Honda','Accord','Black','Tom'],
         chainId: options.channel_id,
         txId: tx_id
     };
