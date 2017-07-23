@@ -55,7 +55,7 @@ router.post('/submitquote', function (req, res, next) {
     // var premium = req.body.premium
     var startDate = req.body.startDate
     var endDate = req.body.endDate
-    invoke.invokeFunction('submitForQuote', ['iPhone', 'IMAGH HERE', '0.3', startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
+    invoke.invokeFunction('submitForQuote', ['iPhone', 'IMAGE HERE', '0.3', startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
             if (val) {
 		console.log(typeof(val))	
 		val  = JSON.parse(val) 
