@@ -149,7 +149,7 @@ exports.invokeFunction = function(funcName, args) {
             if (payload == null) {
                 payload = "No response sent"
             }
-            deferred.resolve(payload);
+            deferred.resolve(payload.toString());
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
             return 'Failed to order the transaction. Error code: ' + response.status;

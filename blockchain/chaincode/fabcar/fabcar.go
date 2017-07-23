@@ -142,7 +142,8 @@ func (s *SmartContract) createPolicy(APIstub shim.ChaincodeStubInterface, args [
 	customerAsBytes, _ = json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
-	return shim.Success(nil)
+	resAsBytes, _ := json.Marshal("Sucess")
+	return shim.Success(resAsBytes)
 }
 
 func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
@@ -163,8 +164,8 @@ func (s *SmartContract) createCustomerProfile(APIstub shim.ChaincodeStubInterfac
 	fmt.Println(customerKey)
 	customerAsBytes, _ := json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
-
-	return shim.Success(nil)
+	resAsBytes, _ := json.Marshal("Sucess")
+	return shim.Success(resAsBytes)
 }
 
 func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
@@ -174,10 +175,16 @@ func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args
 	}
 
 	//BUSINESS LOGIC HERE FOR RATING BASED ON INFORMATION
-	prem := 100.00
+	deviceType := args[0]
+
+	if deviceType == "iPhone" {
+		prem := 10.00
+	} else {
+		prem := 8.00
+	}
 
 	//Create quote package
-	var quote = Quote{DeviceType: args[0], DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
+	var quote = Quote{DeviceType: deviceType, DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
 
 	//Auth
 	email := args[5]
@@ -201,7 +208,7 @@ func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args
 	customerAsBytes, _ = json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
-	quoteAsBytes, _ = json.Marshal(quote)
+	quoteAsBytes, _ := json.Marshal(quote)
 	return shim.Success(quoteAsBytes)
 }
 
