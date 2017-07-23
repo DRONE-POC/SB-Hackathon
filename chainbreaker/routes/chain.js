@@ -5,7 +5,9 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var invoke = require('../utils/invokeFunction');
 var query = require('../utils/queryFunction');
+const fileUpload = require('express-fileupload');
 
+router.use(fileUpload());
 var options = {
     wallet_path: path.join(__dirname, '../utils'),
     user_id: 'PeerAdmin',
@@ -69,6 +71,43 @@ router.get('/getcustomer', function(req,res,next){
             res.send('no account with that key');
         }
     });
+});
+
+router.get('/checkstatus?=custID', function(req,res,next){
+    if(!params.custID){
+        res.status(400);
+        res.send('failed to receive quote package');
+    }
+});
+
+router.post('/getaquote', function(req,res,next){
+    if(!req.body && !req.body.quote){
+        res.status(400);
+        res.send('failed to receive quote package');
+    }
+});
+
+router.post('/getpolicy', function(req, res, next){
+
+});
+
+router.post('/claim', function(req, res, next){
+    if(!req.body && !req.body.claim){
+        res.status(400);
+        res.send('failed to receive quote package');
+    } else {
+        res.status(200);
+        res.send();
+    }
+});
+
+router.post('/upload', function(req, res) {
+  //console.log(req);
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+  
+  console.log(req.files.pictureFile); // the uploaded file object 
+  return res.status(200).send('Good');
 });
 
 module.exports = router;
