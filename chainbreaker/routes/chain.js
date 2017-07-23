@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var invoke = require('../utils/invokeFunction');
 var query = require('../utils/queryFunction');
 const fileUpload = require('express-fileupload');
+var request = require('superagent');
+//var form = require('connect-form');
 
 router.use(fileUpload());
 var options = {
@@ -104,13 +106,85 @@ router.post('/claim', function(req, res, next){
     }
 });
 
-router.post('/upload', function(req, res) {
-  //console.log(req);
-  if (!req.files)
-    return res.status(400).send('No files were uploaded.');
+router.post('/upload', function(req, res3) {
+    if (!req.files)
+        return res3.status(400).send('No files were uploaded.');
+    
+    // {
+    //     name: 'IMG_2009.JPG',
+    //     data: '',
+    //     encoding: '7bit',
+    //     mimetype: 'image/jpeg',
+    //     mv: ''
+    // }
+    console.dir(req.files.pictureFile);
+
+    // request.post({url:'http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phonetype', form: {name:req.files.pictureFile.name, filename:'file', files: [req.files.pictureFile.data]}}, 
+    //     function(err,httpResponse,body){ /* ... */ 
+    //         console.log(body);
+    //         console.log(err);
+
+    //         request.post({url:'http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phone_broken', form: {name:req.files.pictureFile.name, filename:'file', files: [req.files.pictureFile.data]}}, 
+    //             function(err,httpRespBroke,body2){  
+    //                 console.log(body2);
+    //                 console.log(err);
+    //                 res2.status(200);
+    //                 res2.send('Good');
+    //             });              
+
+    //     });
+
+    request.post('http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phone_broken')
+        .field('type','file')
+        .field('name','file')
+        .attach('file', req.files.pictureFile.data, req.files.pictureFile.name)
+        .end((err, res) => {
+            console.log(err);
+            console.log(res.body + " this is res 2");
+            console.dir(res.body);
+
+            request.post('http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phonetype')
+                .field('type','file')
+                .field('name','file')
+                .attach('file', req.files.pictureFile.data, req.files.pictureFile.name)
+                .end((err, res2) => {
+                    console.log(err);
+                    console.log(res2.body + " this is res 2");
+                    console.dir(res2.body); 
+
+                    
+                    var aiData = {
+                        broken: res.body.predictions.broken,
+                        unbroken: res.body.predictions.unbroken,
+                        android: res2.body.predictions.android,
+                        iphone: res2.body.predictions.iphone
+                     } 
+
+                    res3.render('confirm',{ aiData: aiData, file: req.files.pictureFile});
+                });        
+        });
+
+
+
   
-  console.log(req.files.pictureFile); // the uploaded file object 
-  return res.status(200).send('Good');
+//   console.log(req.files.pictureFile); // the uploaded file object 
+//   request.post("http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phonetype")
+//         .send(req.files[0])
+//         .end((err, res) => {
+//             console.log(err);
+//             console.log(res.body + "this is res 1");
+
+//             request.post("http://ec2-13-59-4-168.us-east-2.compute.amazonaws.com:9091/predict/phone_broken")
+//                 .send(req.files[0])
+//                 .end((err, res) => {
+//                     console.log(err);
+//                     console.log(res.body + " this is res 2");
+//                     res2.status(200);
+//                     res2.send('Good');
+//                 });
+//         });
+
+
 });
 
 module.exports = router;
