@@ -58,9 +58,9 @@ app.get('/login',
     res.render('login');
   });
 
-app.get('/submitquote',
+  app.get('/duration',
   function(req, res){
-    res.render('quote');
+    res.render('duration');
   });
   
 app.post('/login', 

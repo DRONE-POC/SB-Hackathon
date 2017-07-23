@@ -18,20 +18,9 @@ var channel = {};
 var client = null;
 
 /* GET users listing. */
-router.gett('/', function(req, res, next) {
-    invoke.invokeFunction('createCar', ['CAR13', 'FERARIF50', 'F50', 'RED', 'Wendy Sperry']).then(function(val){
-        if(val) {
-            res.send(val);
-        } else {
-            res.send('cry');
-        }
-    });
-});
 
-router.post('/createcustomer', function(req,res, next){
-    var name = req.body.name
-    var email = req.body.email
-    var password = req.body.password
+router.get('/createcustomer', function(req,res, next){
+
     invoke.invokeFunction('createCustomerProfile', [name, email, password]).then(function(val){
         if(val) {
             res.send(val);
@@ -57,14 +46,15 @@ router.post('/createpolicy', function(req,res, next){
 });
 
 router.post('/submitquote', function (req, res, next) {
-    var deviceType = req.body.deviceType
-    var img = req.body.image
-    var premium = req.body.premium
+    // var deviceType = req.body.deviceType
+    // var img = req.body.image
+    // var premium = req.body.premium
     var startDate = req.body.startDate
     var endDate = req.body.endDate
-    invoke.invokeFunction('submitForQuote', [deviceType, img, premium, startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
+    invoke.invokeFunction('submitForQuote', ['deviceType', 'img', 'premium', startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
             if (val) {
-                res.send(val);
+                console.log(val);
+                res.render('confirmQuote', {json : val});
             } else {
                 res.send('could not create quote');
             }
