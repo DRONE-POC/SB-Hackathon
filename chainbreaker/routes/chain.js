@@ -23,7 +23,7 @@ var client = null;
 
 router.get('/createcustomer', function(req,res, next){
 
-    invoke.invokeFunction('createCustomerProfile', [name, email, password]).then(function(val){
+    invoke.invokeFunction('createCustomerProfile', ["Jack", "trucksarecool@indiana.com", "beefjerkyftw"]).then(function(val){
         if(val) {
             res.send(val);
         } else {
@@ -55,8 +55,11 @@ router.post('/submitquote', function (req, res, next) {
     var endDate = req.body.endDate
     invoke.invokeFunction('submitForQuote', ['deviceType', 'img', 'premium', startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
             if (val) {
-                console.log(val);
-                res.render('confirmQuote', {json : val});
+		console.log(typeof(val))	
+		val  = JSON.parse(val) 
+                console.log(val.StartDate);
+		res.render('confirmQuote', {json : val});
+
             } else {
                 res.send('could not create quote');
             }
