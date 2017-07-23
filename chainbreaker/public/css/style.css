@@ -53,3 +53,19 @@ a {
 a.login-url:hover{
   text-decoration: none;
 }
+
+.landing-page{
+  background-color: #fff;
+  width: 80%
+}
+
+.landing-page__title{
+  color: #fff;
+  font-size: 36px;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+
+.landing-page__card-bottom-text{
+  margin: 0px;
+}
