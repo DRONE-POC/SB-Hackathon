@@ -4,7 +4,9 @@ var hfc = require('fabric-client');
 var path = require('path');
 var invoke = require('../utils/invokeFunction');
 var query = require('../utils/queryFunction');
+const fileUpload = require('express-fileupload');
 
+router.use(fileUpload());
 var options = {
     wallet_path: path.join(__dirname, '../utils'),
     user_id: 'PeerAdmin',
@@ -96,11 +98,12 @@ router.post('/claim', function(req, res, next){
 });
 
 router.post('/upload', function(req, res) {
+  //console.log(req);
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
   
-  console.log(req.files.foo); // the uploaded file object 
-  
+  console.log(req.files.pictureFile); // the uploaded file object 
+  return res.status(200).send('Good');
 });
 
 module.exports = router;
