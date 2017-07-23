@@ -54,9 +54,35 @@ a.login-url:hover{
   text-decoration: none;
 }
 
-.landing-page{
+.landing-page__card{
   background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
   width: 80%
+}
+
+.landing-page__card-top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 7.5%;
+  padding-right: 7.5%;
+  margin-top: 5%;
+}
+
+.landing-page__card-left{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+
+.landing-page__card-right{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
 }
 
 .landing-page__title{
@@ -66,6 +92,20 @@ a.login-url:hover{
   margin-top: 3%;
 }
 
+.landing-page__card-bottom{
+  display: flex;
+  flex-direction: column;
+  padding-left: 26%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
 .landing-page__card-bottom-text{
   margin: 0px;
+  font-size: 18px;
+}
+
+.landing-page__action-text{
+  font-size: 24px;
+  text-align: center;
 }
