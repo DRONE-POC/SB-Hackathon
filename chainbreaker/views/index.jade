@@ -5,8 +5,11 @@ block content
   div.landing-page__card
     div.landing-page__card-top
       div.landing-page__card-left
-        a.landing-page__photo
-          img.landing-page__user-action(src="/img/photo.png")
+        form#uploadForm(ref='uploadForm', method="POST", action="/chain/upload", enctype="multipart/form-data")
+          a.landing-page__photo
+            img.landing-page__user-action(src="/img/photo.png")
+          input#pictureFile(type="file", name="pictureFile")
+          button(type="submit", value='Upload!') Upload
         p.landing-page__action-text Upload a picture of what you want to insure
       div.landing-page__card-right
         a.landing-page__capture
@@ -14,9 +17,6 @@ block content
         p.landing-page__action-text Take a picture of what you want to insure
     div.landing-page__card-bottom
       p.landing-page__card-bottom-text 1. Take or upload a picture of what you want to protectet
-        form#uploadForm(ref='uploadForm', method="POST", action="/chain/upload", enctype="multipart/form-data")
-          input#pictureFile(type="file", name="pictureFile")
-          button(type="submit", value='Upload!') Upload
       p.landing-page__card-bottom-text 2. Tell us how long you need it protected for
       p.landing-page__card-bottom-text 3. Let us know who you are
       p.landing-page__card-bottom-text 4. Pay and be on your way

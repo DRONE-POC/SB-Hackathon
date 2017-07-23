@@ -20,7 +20,7 @@ var channel = {};
 var client = null;
 
 /* GET users listing. */
-router.gett('/', function(req, res, next) {
+router.get('/', function(req, res, next) {
     invoke.invokeFunction('createCar', ['CAR13', 'FERARIF50', 'F50', 'RED', 'Wendy Sperry']).then(function(val){
         if(val) {
             res.send(val);
