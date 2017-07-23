@@ -176,15 +176,13 @@ func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args
 
 	//BUSINESS LOGIC HERE FOR RATING BASED ON INFORMATION
 	deviceType := args[0]
-
+	premAmt := 0.25
 	if deviceType == "iPhone" {
-		prem := 0.30
-	} else {
-		prem := 0.25
+		premAmt = 0.30
 	}
 
 	//Create quote package
-	var quote = Quote{DeviceType: deviceType, DeviceImage: args[1], Premium: prem, StartDate: args[3], EndDate: args[4]}
+	var quote = Quote{DeviceType: deviceType, DeviceImage: args[1], Premium: premAmt, StartDate: args[3], EndDate: args[4]}
 
 	//Auth
 	email := args[5]
