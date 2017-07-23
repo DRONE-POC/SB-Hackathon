@@ -7,6 +7,12 @@ body {
   align-items: center;
 }
 
+.body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 a {
   color: #00B7FF;
 }
