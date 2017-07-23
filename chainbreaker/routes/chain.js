@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var hfc = require('fabric-client');
 var path = require('path');
+var bodyParser = require('body-parser');
 var invoke = require('../utils/invokeFunction');
 var query = require('../utils/queryFunction');
 
@@ -17,7 +18,7 @@ var channel = {};
 var client = null;
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.gett('/', function(req, res, next) {
     invoke.invokeFunction('createCar', ['CAR13', 'FERARIF50', 'F50', 'RED', 'Wendy Sperry']).then(function(val){
         if(val) {
             res.send(val);
@@ -27,8 +28,11 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/createcustomer', function(req,res, next){
-    invoke.invokeFunction('createCustomerProfile', ['Billy Bob Crankey Jr.', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+router.post('/createcustomer', function(req,res, next){
+    var name = req.body.name
+    var email = req.body.email
+    var password = req.body.password
+    invoke.invokeFunction('createCustomerProfile', [name, email, password]).then(function(val){
         if(val) {
             res.send(val);
         } else {
@@ -37,8 +41,13 @@ router.get('/createcustomer', function(req,res, next){
     });
 });
 
-router.get('/createpolicy', function(req,res, next){
-    invoke.invokeFunction('createPolicy', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
+router.post('/createpolicy', function(req,res, next){
+    var deviceType = req.body.deviceType
+    var img = req.body.image
+    var premium = req.body.premium
+    var startDate = req.body.startDate
+    var endDate = req.body.endDate
+    invoke.invokeFunction('createPolicy', [deviceType, img, premium, startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function(val){
         if(val) {
             res.send(val);
         } else {
@@ -47,8 +56,13 @@ router.get('/createpolicy', function(req,res, next){
     });
 });
 
-router.get('/submitquote', function (req, res, next) {
-    invoke.invokeFunction('submitForQuote', ['iPhone', '0x012141232', '100.00', '7/23/2017', '7/25/2017', 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
+router.post('/submitquote', function (req, res, next) {
+    var deviceType = req.body.deviceType
+    var img = req.body.image
+    var premium = req.body.premium
+    var startDate = req.body.startDate
+    var endDate = req.body.endDate
+    invoke.invokeFunction('submitForQuote', [deviceType, img, premium, startDate, endDate, 'trucksarecool@indiana.com', 'beefjerkyftw']).then(function (val) {
             if (val) {
                 res.send(val);
             } else {
@@ -65,34 +79,6 @@ router.get('/getcustomer', function(req,res,next){
             res.send('no account with that key');
         }
     });
-});
-
-router.get('/checkstatus?=custID', function(req,res,next){
-    if(!params.custID){
-        res.status(400);
-        res.send('failed to receive quote package');
-    }
-});
-
-router.post('/getaquote', function(req,res,next){
-    if(!req.body && !req.body.quote){
-        res.status(400);
-        res.send('failed to receive quote package');
-    }
-});
-
-router.post('/getpolicy', function(req, res, next){
-
-});
-
-router.post('/claim', function(req, res, next){
-    if(!req.body && !req.body.claim){
-        res.status(400);
-        res.send('failed to receive quote package');
-    } else {
-        res.status(200);
-        res.send();
-    }
 });
 
 module.exports = router;

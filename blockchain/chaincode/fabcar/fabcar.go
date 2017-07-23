@@ -178,9 +178,9 @@ func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args
 	deviceType := args[0]
 
 	if deviceType == "iPhone" {
-		prem := 10.00
+		prem := 0.30
 	} else {
-		prem := 8.00
+		prem := 0.25
 	}
 
 	//Create quote package
