@@ -11,6 +11,7 @@ body {
     display: flex;
     align-items: center;
     flex-direction: column;
+    width: 80%;
 }
 
 a {
@@ -19,10 +20,36 @@ a {
 
 .header {
   background-color: #8A66C3;
-  height: 200px;
+  height: 100px;
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
 }
 
 .login-form{
   width: 80%;
+}
+
+.team-name{
+  color: #fff;
+  font-size: 36px;
+  align-self: center;
+  padding-left: 5%;
+}
+
+.login{
+  color: #fff;
+  font-size: 20px;
+  align-self: center;
+  padding-right: 5%;
+}
+
+.login-url{
+  color: #fff;
+}
+
+a.login-url:hover{
+  text-decoration: none;
 }

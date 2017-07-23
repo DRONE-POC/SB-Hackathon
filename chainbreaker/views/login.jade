@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome
+    h1= title
 
     form.well(id='form-login', action='/login', method='post', class='login-form')
                 h2 Hello!
@@ -17,11 +16,4 @@ block content
                     button(type='submit').btn.btn-primary.button-sign-in
                         span.glyphicon.glyphicon-lock
                         | Sign In
-                .clearfix
-                hr
-                .btm-links
-                    #forgot-password
-                        a(href='#') Forgot Your Password?
-                    #create-account
-                        a(href='/signup') Create An Account
                 .clearfix

@@ -5,8 +5,17 @@ html
     link(rel='stylesheet', href='/css/bootstrap-theme.css')
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/style.css')
+    script(src='/js/jquery-3.2.1.js')
+    script(src='/js/bootstrap.js')
+    script(src='/js/custom.js')
   body
     #header.header
-      p "YOLO"
+      div.team-name
+        p Bumbleshoot
+      div.login
+        if !user
+          a(href="/login").login-url Login
+        else
+          p Welcome #{user}
     #body.body
       block content

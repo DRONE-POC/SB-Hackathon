@@ -61,13 +61,16 @@ app.get('/login',
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/home');
   });
 
-app.get('/', require('connect-ensure-login').ensureLoggedIn(), function(req, res, next) {
-    res.render('index', { title: 'Express' });
+app.get('/', function(req, res, next) {
+    res.render('index', { title: 'Express'});
 });
 
+app.get('/home', require('connect-ensure-login').ensureLoggedIn(), function(req, res, next) {
+    res.render('home', { title: 'Express', user: req.user.displayName });
+});
 // var users = [
 //     {id:'1', username:'test@test.com', emailaddr:'test@test.com', password: 'password'},
 //     {id:'2', username:'test1@test.com', emailaddr:'test1@test.com', password: 'password1'},
