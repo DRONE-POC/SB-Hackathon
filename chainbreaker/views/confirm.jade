@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1.landing-page__title Is this Correct?
+  div.landing-page__card
+    div.landing-page__card-top
+        if aiData.broken > aiData.unbroken
+            p Your Device is broken
+        else
+            p Your Device is not broken
+        if aiData.android > aiData.iphone
+            p Your device is an android
+        else
+            p Your device is an iPhone
+
+      div.landing-page__card-left #{aiData.broken} #{aiData.unbroken} #{aiData.android} #{aiData.iphone}
+        p.landing-page__action-text 
+      div.landing-page__card-right
+        a.landing-page__capture
+        p.landing-page__action-text
+    div.landing-page__card-bottom
+        button.confirm(onclick='move()')
+        script.
+            function move(){
+                window.location.href = '/duration'
+            } 
