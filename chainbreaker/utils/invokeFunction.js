@@ -146,7 +146,7 @@ exports.invokeFunction = function(funcName, args) {
     }).then((response) => {
         if (response.status === 'SUCCESS') {
             console.log('Successfully sent transaction to the orderer.');
-            if (payload == nil) {
+            if (payload == null) {
                 payload = "No response sent"
             }
             deferred.resolve(payload);
