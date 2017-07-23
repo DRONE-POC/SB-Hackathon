@@ -11,6 +11,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "express-fileupload": "^0.1.4",
     "express-session": "^1.15.4",
     "fabric-ca-client": "^1.0.0",
     "fabric-client": "^1.0.0",
