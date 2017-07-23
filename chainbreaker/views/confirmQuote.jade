@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    h1= title
+    form.well(id='form-login', action='/chain/createpolicy', method='post', class='login-form')
+                h2 Please confirm your quote
+                .form-group
+                    label Device Type
+                    input.form-control(type='text', id='user-tf', name='deviceType', value="#{json.DeviceType}", readonly="readonly")
+                .form-group
+                    label Device Image
+                    input.form-control(type='text', id='pass-tf', name='image', value="#{json.DeviceImage}", readonly="readonly")
+                .form-group
+                    label Premium Daily Rate
+                    input.form-control(type='text', id='prem-tf', name='premium', value="#{json.Premium}", readonly="readonly")
+                .form-group
+                    label Start Date
+                    input.form-control(type='text', id='start-tf', name='startDate', value="#{json.StartDate}", readonly="readonly")
+                .form-group
+                    label End Date
+                    input.form-control(type='text', id='end-tf', name='endDate', value="#{json.EndDate}", readonly="readonly")
+                .controls
+                    button(type='submit').btn.btn-primary.button-sign-in Confirm
+                .clearfix
