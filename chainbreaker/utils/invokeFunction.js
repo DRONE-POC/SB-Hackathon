@@ -152,7 +152,8 @@ exports.invokeFunction = function(funcName, args) {
             deferred.resolve(payload.toString());
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
-            return 'Failed to order the transaction. Error code: ' + response.status;
+            //return 'Failed to order the transaction. Error code: ' + response.status;
+            deferred.resolve('Failed to order the transaction. Error code: ' + response.status);
         }
     }, (err) => {
         console.error('Failed to send transaction due to error: ' + err.stack ? err.stack : err);

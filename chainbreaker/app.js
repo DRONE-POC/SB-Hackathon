@@ -57,6 +57,11 @@ app.get('/login',
   function(req, res){
     res.render('login');
   });
+
+app.get('/submitquote',
+  function(req, res){
+    res.render('quote');
+  });
   
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),

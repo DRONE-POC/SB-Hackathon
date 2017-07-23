@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    h1= title
+
+    form.well(id='form-login', action='/chain/submitquote', method='post', class='login-form')
+                h2 Hello!
+                h6 Please confirm your quote
+                .form-group
+                    label Device Type
+                    input.form-control(type='text', id='user-tf', name='deviceType')
+                .form-group
+                    label Device Image
+                    input.form-control(type='text', id='pass-tf', name='image')
+                .form-group
+                    label Premium Daily Rate
+                    input.form-control(type='text', id='prem-tf', name='premium')
+                .form-group
+                    label Start Date
+                    input.form-control(type='text', id='start-tf', name='startDate')
+                .form-group
+                    label End Date
+                    input.form-control(type='text', id='end-tf', name='endDate')
+                .controls
+                    button(type='submit').btn.btn-primary.button-sign-in Confirm
+                .clearfix
