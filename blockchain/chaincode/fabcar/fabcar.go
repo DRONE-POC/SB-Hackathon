@@ -201,7 +201,7 @@ func (s *SmartContract) submitForQuote(APIstub shim.ChaincodeStubInterface, args
 	customerAsBytes, _ = json.Marshal(customer)
 	APIstub.PutState(customerKey, customerAsBytes)
 
-	quoteAsBytes, _ = json.Marshal(quote)
+	quoteAsBytes, _ := json.Marshal(quote)
 	return shim.Success(quoteAsBytes)
 }
 
